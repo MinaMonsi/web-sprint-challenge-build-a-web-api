@@ -3,8 +3,17 @@ const router = require('express').Router();
 const Projects = require("./projects-model");
 
 
-router.get('/',(req,res,next) =>{
-    next()
+router.get('/',(req,res) =>{
+   const array = [];
+   Projects.get()
+   .then(projects => {
+       res.status(200).json(projects);
+   })
+   .catch(err => {
+       console.log(err)
+       res.send(array).json({message: "Projects could not be retrieved"})
+   })
+    
 })
 
 router.get('/',(req,res,next) =>{
