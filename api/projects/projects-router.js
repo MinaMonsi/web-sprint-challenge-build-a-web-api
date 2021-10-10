@@ -1,5 +1,6 @@
 // Write your "projects" router here!
 const router = require('express').Router();
+const { projectToBody } = require('../../data/helpers/mappers');
 const Projects = require("./projects-model");
 
 
@@ -11,28 +12,54 @@ router.get('/',(req,res) =>{
    })
    .catch(err => {
        console.log(err)
-       res.send(array).json({message: "Projects could not be retrieved"})
+       res.send(array).json({message: "Projects not found"})
    })
     
 })
 
-router.get('/',(req,res,next) =>{
-    next()
+router.get('/:id', async(req,res, next) =>{
+    try{
+        const {id} = req.params
+        const project = await Projects.get(id)
+        if(!project){
+            res.status(404).json({
+                message:"Not found",
+            })
+        }else{
+            res.json(req.project)
+            console.log(project)
+        }
+    }catch(err){
+        next(err)
+    }
 })
 
 router.post('/',(req,res,next) =>{
+    const newProject = req.body
+    if(!newProject || !newProject.id){
+        res.status(400).json({
+            message: "Please provide name and id."
+        })
+    } else {
+        Projects.insert(newProject)
+        .then(createdProject =>{
+            res.json(createdProject)
+        })
+        .catch(err => {
+            next(err)
+        })
+    }
+})
+
+router.put('/:id',(req,res) =>{
+    
+})
+
+router.delete('/:id',(req,res,next) =>{
     next()
 })
 
-router.put('/',(req,res,next) =>{
-    next()
-})
-
-router.delete('/',(req,res,next) =>{
-    next()
-})
-
-router.get('/',(req,res,next) =>{
+router.get('/:id/actions',(req,res,next) =>{
     next()
 })
 
