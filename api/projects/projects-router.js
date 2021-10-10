@@ -1,7 +1,7 @@
 // Write your "projects" router here!
 const router = require('express').Router();
-const { projectToBody } = require('../../data/helpers/mappers');
 const Projects = require("./projects-model");
+const { checkId } = require('./projects-middleware')
 
 
 router.get('/',(req,res) =>{
@@ -51,16 +51,16 @@ router.post('/',(req,res,next) =>{
     }
 })
 
-router.put('/:id',(req,res) =>{
+router.put('/:id', checkId, async (req,res, next) =>{
+        next()
+})
+
+router.delete('/:id', async (req,res,next) =>{
+        next()
+})
+
+router.get('/:id/actions',(req,res) =>{
     
-})
-
-router.delete('/:id',(req,res,next) =>{
-    next()
-})
-
-router.get('/:id/actions',(req,res,next) =>{
-    next()
 })
 
 //error handling router
